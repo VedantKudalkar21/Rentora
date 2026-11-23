@@ -1,36 +1,217 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { api } from './api';
-import GoogleSignIn from './GoogleSignIn';
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion } from "motion/react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+  Check,
+} from "lucide-react";
+import { api } from "./api";
+import GoogleSignIn from "./GoogleSignIn";
+import { Brand } from "./Shell";
+import EquipmentArt from "./EquipmentArt";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
 
 export default function AuthPage({ register = false, config, onSuccess }) {
   const location = useLocation();
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const change = event => setForm({ ...form, [event.target.name]: event.target.value });
+  const [visible, setVisible] = useState(false);
+  const change = (event) =>
+    setForm({ ...form, [event.target.name]: event.target.value });
   async function submit(event) {
-    event.preventDefault(); setBusy(true); setError('');
+    event.preventDefault();
+    setBusy(true);
+    setError("");
     try {
-      const response = await api(register ? '/auth/register' : '/auth/login', {
-        method: 'POST', skipAuth: true, body: register ? form : { email: form.email, password: form.password },
-      });
-      onSuccess(response);
-    } catch (err) { setError(err.message); } finally { setBusy(false); }
+      onSuccess(
+        await api(register ? "/auth/register" : "/auth/login", {
+          method: "POST",
+          skipAuth: true,
+          body: register
+            ? form
+            : { email: form.email, password: form.password },
+        }),
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
   }
-  return <section className="auth-page container-fluid px-0"><div className="row g-4 align-items-center">
-    <div className="col-lg-6 auth-intro"><div className="eyebrow">YOUR NEXT GREAT IDEA STARTS HERE</div><h1>{register ? 'Make room for possibility.' : 'Welcome back to possibility.'}</h1><p>One account. The right gear. More room to create, explore, and make things happen.</p><div className="auth-promise">✓ Flexible rental dates<br/>✓ Clear pricing and booking history<br/>✓ Equipment for work and weekends</div></div>
-    <div className="col-lg-6"><div className="auth-card card"><h2>{register ? 'Create your account' : 'Sign in to Rentora'}</h2><p className="modal-description">{register ? 'Your next plan is one step closer.' : 'Good to have you here again.'}</p>
-      <div className="auth-tabs"><Link to="/login" state={location.state} className={!register ? 'active' : ''}>Sign in</Link><Link to="/register" state={location.state} className={register ? 'active' : ''}>Create account</Link></div>
-      <form className="form-stack" onSubmit={submit}>
-        {register && <label>Full name<input className="form-control" required minLength={2} maxLength={80} autoComplete="name" name="name" value={form.name} onChange={change}/></label>}
-        <label>Email address<input className="form-control" required type="email" maxLength={120} autoComplete="email" name="email" value={form.email} onChange={change} placeholder="you@example.com"/></label>
-        <label>Password<input className="form-control" required type="password" minLength={8} maxLength={72} autoComplete={register ? 'new-password' : 'current-password'} name="password" value={form.password} onChange={change}/></label>
-        {error && <p className="form-error" role="alert">{error}</p>}
-        <button className="btn btn-primary w-100" disabled={busy}>{busy ? 'Please wait…' : register ? 'Create account' : 'Sign in'}</button>
-      </form>
-      <div className="auth-divider"><span>or</span></div><GoogleSignIn config={config} onSuccess={onSuccess}/>
-      {!register && <div className="demo-logins"><span>TRY THE DEMO</span><button onClick={() => setForm({ name: '', email: 'user@rentora.local', password: 'User@1234' })}>Fill customer login</button><button onClick={() => setForm({ name: '', email: 'admin@rentora.local', password: 'Admin@123' })}>Fill admin login</button></div>}
-    </div></div>
-  </div></section>;
+  return (
+    <div className="auth-screen">
+      <aside className="auth-story">
+        <Brand light />
+        <div className="auth-story-copy">
+          <span className="kicker light-kicker">
+            MORE POSSIBILITIES. LESS COMMITMENT.
+          </span>
+          <h1>
+            Big plans.
+            <br />
+            Just the gear
+            <br />
+            <em>you need.</em>
+          </h1>
+          <p>From everyday projects to extraordinary weekends.</p>
+        </div>
+        <div className="auth-art">
+          <div className="auth-art-orbit" />
+          <EquipmentArt category={register ? "Outdoor" : "Cameras"} />
+          <span className="auth-art-sticker">
+            <ArrowUpRight />
+            Make room
+            <br />
+            for more.
+          </span>
+        </div>
+        <div className="auth-story-bottom">
+          <span>RENTORA</span>
+          <span>OWN THE MOMENT.</span>
+        </div>
+      </aside>
+      <main className="auth-main">
+        <div className="auth-top">
+          <Link to="/" className="back-link">
+            <ArrowLeft size={16} />
+            Back to home
+          </Link>
+          <span>
+            {register ? "Already a member?" : "New around here?"}
+            <Link to={register ? "/login" : "/register"} state={location.state}>
+              {register ? "Log in" : "Sign up"}
+              <ArrowUpRight size={14} />
+            </Link>
+          </span>
+        </div>
+        <motion.div
+          key={register ? "register" : "login"}
+          className="auth-form-wrap"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+        >
+          <div className="auth-mobile-brand">
+            <Brand />
+          </div>
+          <span className="kicker">
+            {register ? "LET’S GET YOU STARTED" : "YOUR NEXT PLAN STARTS HERE"}
+          </span>
+          <h2>{register ? "Create your account." : "Welcome back."}</h2>
+          <p className="auth-subtitle">
+            {register
+              ? "Join Rentora to rent equipment and list your own."
+              : "Log in to manage your rentals and listings."}
+          </p>
+          <form onSubmit={submit} className="auth-form">
+            {register && (
+              <label htmlFor="auth-name">
+                Full name
+                <Input
+                  id="auth-name"
+                  required
+                  minLength={2}
+                  maxLength={80}
+                  autoComplete="name"
+                  name="name"
+                  value={form.name}
+                  onChange={change}
+                  placeholder="Your full name"
+                />
+              </label>
+            )}
+            <label htmlFor="auth-email">
+              Email address
+              <Input
+                id="auth-email"
+                required
+                type="email"
+                autoComplete="email"
+                name="email"
+                maxLength={120}
+                value={form.email}
+                onChange={change}
+                placeholder="you@example.com"
+              />
+            </label>
+            <label htmlFor="auth-password">
+              Password
+              <div className="password-control">
+                <Input
+                  id="auth-password"
+                  required
+                  type={visible ? "text" : "password"}
+                  minLength={8}
+                  maxLength={72}
+                  autoComplete={register ? "new-password" : "current-password"}
+                  name="password"
+                  value={form.password}
+                  onChange={change}
+                  placeholder={
+                    register ? "At least 8 characters" : "Enter your password"
+                  }
+                />
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setVisible(!visible)}
+                  aria-label={visible ? "Hide password" : "Show password"}
+                >
+                  {visible ? <EyeOff size={17} /> : <Eye size={17} />}
+                </Button>
+              </div>
+            </label>
+            {error && (
+              <div className="form-error" role="alert">
+                {error}
+              </div>
+            )}
+            <Button
+              type="submit"
+              size="lg"
+              className="auth-submit"
+              disabled={busy}
+            >
+              {busy ? (
+                <>
+                  <LoaderCircle className="animate-spin" size={17} />
+                  Please wait
+                </>
+              ) : (
+                <>
+                  {register ? "Create account" : "Log in"}
+                  <ArrowUpRight size={18} />
+                </>
+              )}
+            </Button>
+          </form>
+          {config?.googleEnabled && (
+            <>
+              <div className="auth-divider">
+                <span>or continue with</span>
+              </div>
+              <GoogleSignIn config={config} onSuccess={onSuccess} />
+            </>
+          )}
+          <p className="auth-switch">
+            {register ? "Have an account?" : "Don’t have an account?"}{" "}
+            <Link to={register ? "/login" : "/register"} state={location.state}>
+              {register ? "Log in" : "Create an account"}
+            </Link>
+          </p>
+        </motion.div>
+        <div className="auth-bottom-note">
+          <span className="small-dot" /> A little less owning. A little more
+          doing.
+        </div>
+      </main>
+    </div>
+  );
 }

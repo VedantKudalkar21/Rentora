@@ -1,0 +1,22 @@
+# Dependencies and builds
+node_modules/
+target/
+dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local configuration
+application-local.properties
+application-local.yml
+application-local.yaml
+**/application.properties
+
+# Logs and editor files
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -2,6 +2,50 @@
 
 Rentora lets customers browse equipment, reserve dates, and track rentals. Administrators manage equipment, approve or reject requests, and record returns with automatically calculated late fees.
 
+## Screenshots
+
+Explore Rentora’s customer and admin interfaces, from browsing equipment to reviewing listings.
+
+### Landing page
+
+![Rentora — Landing page](docs/screenshots/landing-page.png)
+
+### Create an account and Google sign-in
+
+![Rentora — Create an account and Google sign-in](docs/screenshots/create-account.png)
+
+### Customer dashboard
+
+![Rentora — Customer dashboard](docs/screenshots/customer-dashboard.png)
+
+### Equipment marketplace and filters
+
+![Rentora — Equipment marketplace and filters](docs/screenshots/equipment-marketplace.png)
+
+### Equipment catalogue and daily pricing
+
+![Rentora — Equipment catalogue and daily pricing](docs/screenshots/equipment-catalogue.png)
+
+### Create an equipment listing
+
+![Rentora — Create an equipment listing](docs/screenshots/create-listing.png)
+
+### Submitted listing with product photo
+
+![Rentora — Submitted listing with product photo](docs/screenshots/submitted-listing.png)
+
+### Admin rental overview
+
+![Rentora — Admin rental overview](docs/screenshots/admin-dashboard.png)
+
+### Admin listing review
+
+![Rentora — Admin listing review](docs/screenshots/listing-review.png)
+
+### Admin equipment management
+
+![Rentora — Admin equipment management](docs/screenshots/equipment-management.png)
+
 ## Stack
 
 React 19, Vite 7, HTML, CSS, JavaScript; Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA; MySQL. No paid service or API key is required.
